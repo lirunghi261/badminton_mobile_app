@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_login_card"
+    android:elevation="2dp"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Product Image -->
+    <ImageView
+        android:id="@+id/imgProduct"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:scaleType="centerInside"
+        android:background="#FAFAFA"
+        android:contentDescription="Ảnh sản phẩm" />
+
+    <!-- Product Name -->
+    <TextView
+        android:id="@+id/tvProductName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Tên vợt"
+        android:textColor="@color/colorText"
+        android:textSize="13sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:lineSpacingExtra="2dp" />
+
+    <!-- Product Price Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvProductPriceOriginal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="đ1.500.000"
+            android:textColor="#999999"
+            android:textSize="11sp"
+            android:visibility="gone" /> <!-- Hidden if no discount -->
+
+        <TextView
+            android:id="@+id/tvProductDiscountBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:background="#FFCDD2"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="1dp"
+            android:text="-10%"
+            android:textColor="#D32F2F"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Final Price -->
+    <TextView
+        android:id="@+id/tvProductPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="đ1.500.000"
+        android:textColor="#E64A19"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Product Brand -->
+    <TextView
+        android:id="@+id/tvProductBrand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Yonex"
+        android:textColor="#999999"
+        android:textSize="11sp" />
+
+</LinearLayout>
