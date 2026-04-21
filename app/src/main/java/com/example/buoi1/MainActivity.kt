@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.util.Log
-import android.widget.Toast.makeText
+import android.widget.Toast
 import com.example.buoi1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -58,13 +58,43 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnLogin.setOnClickListener {
+            val username = binding.edtUsername.text.toString().trim()
+            val password = binding.edtPassword.text.toString().trim()
 
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập tài khoản và mật khẩu", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Disable button to prevent double-tap
+            binding.btnLogin.isEnabled = false
+
+            UserManager.login(username, password,
+                onSuccess = { user ->
+                    binding.btnLogin.isEnabled = true
+
+                    when (user.role) {
+                        "admin" -> {
+                            Toast.makeText(this, "Xin chào Admin: ${user.fullName}", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, AdminActivity::class.java)
+                            startActivity(intent)
+                        }
+                        else -> {
+                            Toast.makeText(this, "Xin chào: ${user.fullName}", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                },
+                onFailure = { errorMessage ->
+                    binding.btnLogin.isEnabled = true
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            )
         }
 
         binding.tvRegister.setOnClickListener {
-           makeText(this, "Register Clicked", android.widget.Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Register Clicked", Toast.LENGTH_SHORT).show()
         }
     }
 

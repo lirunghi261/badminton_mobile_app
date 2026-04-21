@@ -34,6 +34,10 @@
         <activity android:name=".CheckoutActivity" />
         <activity android:name=".AddressSelectionActivity" />
         <activity android:name=".OrderHistoryActivity" />
+        <activity android:name=".OrderDetailActivity" />
+        <activity android:name=".AdminActivity" />
+        <activity android:name=".AdminProductListActivity" />
+        <activity android:name=".AdminProductEditActivity" />
     </application>
 
 </manifest>

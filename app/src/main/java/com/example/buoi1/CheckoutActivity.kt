@@ -114,12 +114,6 @@ class CheckoutActivity : AppCompatActivity() {
             val paymentGroup = findViewById<RadioGroup>(R.id.rgPaymentMethods)
             val isCOD = paymentGroup.checkedRadioButtonId == R.id.rbPaymentCOD
 
-            // Clear purchased items from the cart if not direct buy
-            if (directBuyProduct == null) {
-                val currentNames = itemsToCheckout.map { it.product.name }
-                currentNames.forEach { CartManager.removeFromCart(it) }
-            }
-
             val paymentMethod = if (isCOD) "Thanh toán khi nhận hàng" else "Chuyển khoản ngân hàng"
             
             val order = Order(
@@ -131,15 +125,31 @@ class CheckoutActivity : AppCompatActivity() {
                 paymentMethod = paymentMethod,
                 address = UserManager.getSelectedAddress().ifEmpty { "Chưa có địa chỉ" }
             )
-            OrderManager.addOrder(order)
-            
-            Toast.makeText(applicationContext, "Đặt hàng thành công! ($paymentMethod)", Toast.LENGTH_LONG).show()
 
-            // Navigate back to Home and clear backstack
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            finish()
+            // Disable button to prevent double-tap
+            btnCheckoutPlaceOrder.isEnabled = false
+
+            OrderManager.addOrder(order,
+                onSuccess = {
+                    // Clear purchased items from the cart if not direct buy
+                    if (directBuyProduct == null) {
+                        val currentNames = itemsToCheckout.map { it.product.name }
+                        currentNames.forEach { CartManager.removeFromCart(it) }
+                    }
+
+                    Toast.makeText(applicationContext, "Đặt hàng thành công! ($paymentMethod)", Toast.LENGTH_LONG).show()
+
+                    // Navigate back to Home and clear backstack
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                },
+                onFailure = { e ->
+                    btnCheckoutPlaceOrder.isEnabled = true
+                    Toast.makeText(applicationContext, "Đặt hàng thất bại: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            )
         }
     }
 
