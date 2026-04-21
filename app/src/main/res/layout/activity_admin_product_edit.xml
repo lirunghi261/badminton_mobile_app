@@ -93,21 +93,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thương hiệu *"
+                    android:text="Danh mục (Thương hiệu) *"
                     android:textColor="#666666"
                     android:textSize="13sp"
                     android:layout_marginBottom="4dp" />
 
-                <EditText
-                    android:id="@+id/edtProductBrand"
+                <Spinner
+                    android:id="@+id/spinnerProductBrand"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:background="@drawable/bg_input_field"
-                    android:hint="VD: Yonex, Lining, Victor..."
                     android:paddingHorizontal="12dp"
-                    android:textSize="14sp"
-                    android:inputType="text"
-                    android:maxLines="1"
                     android:layout_marginBottom="12dp" />
 
                 <LinearLayout

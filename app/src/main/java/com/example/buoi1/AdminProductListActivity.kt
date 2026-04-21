@@ -107,45 +107,33 @@ class AdminProductListActivity : AppCompatActivity() {
             startActivity(Intent(this, AdminProductEditActivity::class.java))
         }
 
+        // Load categories for brand filter
+        loadCategoriesForFilter()
+
         fetchProducts()
     }
 
     override fun onResume() {
         super.onResume()
+        loadCategoriesForFilter()
         fetchProducts()
     }
 
-    private fun fetchProducts() {
-        progressBar.visibility = View.VISIBLE
-        rvProducts.visibility = View.GONE
-        layoutEmpty.visibility = View.GONE
-
+    private fun loadCategoriesForFilter() {
         val db = FirebaseFirestore.getInstance()
-        db.collection("products")
+        db.collection("categories")
             .get()
             .addOnSuccessListener { result ->
-                progressBar.visibility = View.GONE
-                productList.clear()
-                val brands = mutableSetOf<String>()
-
-                for (document in result) {
-                    val product = Product(
-                        name = document.getString("name") ?: "",
-                        brand = document.getString("brand") ?: "",
-                        price = document.getDouble("price") ?: 0.0,
-                        description = document.getString("description") ?: "",
-                        specifications = document.getString("specifications") ?: "",
-                        imageUrl = document.getString("imageUrl") ?: "",
-                        isFavorite = document.getBoolean("isFavorite") ?: false,
-                        discounted = document.getLong("discounted")?.toInt() ?: 0
-                    )
-                    productList.add(Pair(document.id, product))
-                    if (product.brand.isNotEmpty()) brands.add(product.brand)
-                }
-
-                // Update brand spinner
                 val brandList = mutableListOf("Tất cả")
-                brandList.addAll(brands.sorted())
+                for (doc in result) {
+                    val name = doc.getString("name") ?: ""
+                    if (name.isNotEmpty()) brandList.add(name)
+                }
+                brandList.sort()
+                // Keep "Tất cả" at top
+                brandList.remove("Tất cả")
+                brandList.add(0, "Tất cả")
+
                 val brandAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, brandList)
                 brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinnerBrand.adapter = brandAdapter
@@ -160,6 +148,35 @@ class AdminProductListActivity : AppCompatActivity() {
                         applyFilters()
                     }
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+            }
+    }
+
+    private fun fetchProducts() {
+        progressBar.visibility = View.VISIBLE
+        rvProducts.visibility = View.GONE
+        layoutEmpty.visibility = View.GONE
+
+        val db = FirebaseFirestore.getInstance()
+        db.collection("products")
+            .get()
+            .addOnSuccessListener { result ->
+                progressBar.visibility = View.GONE
+                productList.clear()
+
+                for (document in result) {
+                    val product = Product(
+                        name = document.getString("name") ?: "",
+                        brand = document.getString("brand") ?: "",
+                        categoryId = document.getString("categoryId") ?: "",
+                        price = document.getDouble("price") ?: 0.0,
+                        description = document.getString("description") ?: "",
+                        specifications = document.getString("specifications") ?: "",
+                        imageUrl = document.getString("imageUrl") ?: "",
+                        isFavorite = document.getBoolean("isFavorite") ?: false,
+                        discounted = document.getLong("discounted")?.toInt() ?: 0
+                    )
+                    productList.add(Pair(document.id, product))
                 }
 
                 applyFilters()

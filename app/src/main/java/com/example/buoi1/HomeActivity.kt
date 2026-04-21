@@ -115,8 +115,8 @@ class HomeActivity : AppCompatActivity() {
 //            showAddProductDialog()
 //        }
 
-        // Load brand logos
-        loadBrandLogos()
+        // Load categories from Firebase
+        loadCategories()
 
         // Setup banner slider
         setupBannerSlider()
@@ -172,29 +172,82 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadBrandLogos() {
-        binding.imgYonex.setImageResource(R.drawable.yonex)
-        binding.imgLining.setImageResource(R.drawable.lining)
-        binding.imgVictor.setImageResource(R.drawable.victor)
-        binding.imgMizuno.setImageResource(R.drawable.mizuno)
-        binding.imgGosen.setImageResource(R.drawable.gosen)
-
-        // Brand click listeners
-        val brands = mapOf(
-            binding.imgYonex to "Yonex",
-            binding.imgLining to "Lining",
-            binding.imgVictor to "Victor",
-            binding.imgMizuno to "Mizuno",
-            binding.imgGosen to "Gosen"
-        )
-        brands.forEach { (view, brandName) ->
-            view.setOnClickListener {
-                val intent = android.content.Intent(this, BrandProductsActivity::class.java).apply {
-                    putExtra("EXTRA_BRAND", brandName)
+    private fun loadCategories() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("categories")
+            .get()
+            .addOnSuccessListener { result ->
+                binding.llBrands.removeAllViews()
+                for (document in result) {
+                    val category = Category(
+                        name = document.getString("name") ?: "",
+                        imageUrl = document.getString("imageUrl") ?: "",
+                        description = document.getString("description") ?: ""
+                    )
+                    addCategoryView(category)
                 }
-                startActivity(intent)
+                Log.d(TAG, "Loaded ${result.size()} categories from Firebase")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error loading categories", e)
+            }
+    }
+
+    private fun addCategoryView(category: Category) {
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                marginEnd = 16.dpToPx()
             }
         }
+
+        val imgView = ImageView(this).apply {
+            layoutParams = android.widget.LinearLayout.LayoutParams(64.dpToPx(), 64.dpToPx())
+            background = resources.getDrawable(R.drawable.bg_circle, theme)
+            clipToOutline = true
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            contentDescription = category.name
+        }
+
+        // Load image from drawable by name
+        if (category.imageUrl.isNotEmpty()) {
+            val resId = resources.getIdentifier(category.imageUrl, "drawable", packageName)
+            if (resId != 0) {
+                imgView.setImageResource(resId)
+            } else {
+                imgView.setImageResource(R.drawable.ic_image_placeholder)
+            }
+        } else {
+            imgView.setImageResource(R.drawable.ic_image_placeholder)
+        }
+
+        val tvName = TextView(this).apply {
+            text = category.name
+            setTextColor(resources.getColor(R.color.colorText, theme))
+            textSize = 12f
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = 6.dpToPx()
+            }
+        }
+
+        container.addView(imgView)
+        container.addView(tvName)
+
+        container.setOnClickListener {
+            val intent = android.content.Intent(this, BrandProductsActivity::class.java).apply {
+                putExtra("EXTRA_BRAND", category.name)
+            }
+            startActivity(intent)
+        }
+
+        binding.llBrands.addView(container)
     }
 
     private fun setupBannerSlider() {
@@ -288,7 +341,7 @@ class HomeActivity : AppCompatActivity() {
                     }
 
                     val price = priceText.toDoubleOrNull() ?: 0.0
-                    addProductToFirestore(Product(name, brand, price, description, imageUrl))
+                    addProductToFirestore(Product(name = name, brand = brand, price = price, description = description, imageUrl = imageUrl))
                     dlg.dismiss()
                 }
                 .setNegativeButton("Hủy", null)
@@ -334,6 +387,7 @@ class HomeActivity : AppCompatActivity() {
                     val product = Product(
                         name = document.getString("name") ?: "",
                         brand = document.getString("brand") ?: "",
+                        categoryId = document.getString("categoryId") ?: "",
                         price = document.getDouble("price") ?: 0.0,
                         description = document.getString("description") ?: "",
                         specifications = document.getString("specifications") ?: "",

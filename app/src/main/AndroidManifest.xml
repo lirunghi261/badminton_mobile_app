@@ -38,6 +38,7 @@
         <activity android:name=".AdminActivity" />
         <activity android:name=".AdminProductListActivity" />
         <activity android:name=".AdminProductEditActivity" />
+        <activity android:name=".AdminCategoryActivity" />
     </application>
 
 </manifest>

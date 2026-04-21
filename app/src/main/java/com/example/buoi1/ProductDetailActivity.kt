@@ -375,6 +375,7 @@ class ProductDetailActivity : AppCompatActivity() {
                     Product(
                         name = doc.getString("name") ?: "",
                         brand = doc.getString("brand") ?: "",
+                        categoryId = doc.getString("categoryId") ?: "",
                         price = doc.getDouble("price") ?: 0.0,
                         description = doc.getString("description") ?: "",
                         specifications = doc.getString("specifications") ?: "",

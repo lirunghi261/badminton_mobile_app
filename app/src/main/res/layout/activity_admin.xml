@@ -357,6 +357,47 @@
                         android:layout_marginStart="56dp"
                         android:background="#F0F0F0" />
 
+                    <!-- Manage Categories -->
+                    <LinearLayout
+                        android:id="@+id/btnManageCategories"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_filter"
+                            app:tint="#7B1FA2" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="Quản lý danh mục"
+                            android:textColor="#333333"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_back_arrow"
+                            android:rotation="180"
+                            app:tint="#CCCCCC" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="56dp"
+                        android:background="#F0F0F0" />
+
                     <!-- Manage Orders -->
                     <LinearLayout
                         android:layout_width="match_parent"

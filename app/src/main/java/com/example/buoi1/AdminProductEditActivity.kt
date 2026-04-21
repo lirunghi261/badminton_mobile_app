@@ -3,10 +3,12 @@ package com.example.buoi1
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,7 +21,11 @@ class AdminProductEditActivity : AppCompatActivity() {
 
     private lateinit var layoutSpecRows: LinearLayout
     private lateinit var tvSpecHint: TextView
+    private lateinit var spinnerBrand: Spinner
     private var editDocId: String? = null
+    private val categoryList = mutableListOf<Pair<String, String>>() // docId to name
+    private val categoryNames = mutableListOf<String>()
+    private var pendingCategoryId: String? = null // categoryId to select after categories load
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +42,10 @@ class AdminProductEditActivity : AppCompatActivity() {
 
         layoutSpecRows = findViewById(R.id.layoutSpecRows)
         tvSpecHint = findViewById(R.id.tvSpecHint)
+        spinnerBrand = findViewById(R.id.spinnerProductBrand)
 
         val tvTitle = findViewById<TextView>(R.id.tvTitle)
         val edtName = findViewById<EditText>(R.id.edtProductName)
-        val edtBrand = findViewById<EditText>(R.id.edtProductBrand)
         val edtPrice = findViewById<EditText>(R.id.edtProductPrice)
         val edtDiscount = findViewById<EditText>(R.id.edtProductDiscount)
         val edtImage = findViewById<EditText>(R.id.edtProductImage)
@@ -55,7 +61,7 @@ class AdminProductEditActivity : AppCompatActivity() {
             tvTitle.text = "Sửa sản phẩm"
             btnSave.text = "Cập nhật sản phẩm"
             edtName.setText(editProduct.name)
-            edtBrand.setText(editProduct.brand)
+            pendingCategoryId = editProduct.categoryId // will be selected after categories load
             edtPrice.setText(editProduct.price.toLong().toString())
             if (editProduct.discounted > 0) edtDiscount.setText(editProduct.discounted.toString())
             edtImage.setText(editProduct.imageUrl)
@@ -73,6 +79,9 @@ class AdminProductEditActivity : AppCompatActivity() {
             }
         }
 
+        // Load categories from Firebase
+        loadCategories()
+
         // Add spec row button
         btnAddSpec.setOnClickListener {
             addSpecRow("", "")
@@ -81,7 +90,9 @@ class AdminProductEditActivity : AppCompatActivity() {
         // Save product
         btnSave.setOnClickListener {
             val name = edtName.text.toString().trim()
-            val brand = edtBrand.text.toString().trim()
+            val selectedPos = spinnerBrand.selectedItemPosition
+            val brand = if (spinnerBrand.selectedItem != null) spinnerBrand.selectedItem.toString() else ""
+            val categoryId = if (selectedPos >= 0 && selectedPos < categoryList.size) categoryList[selectedPos].first else ""
             val priceStr = edtPrice.text.toString().trim()
             val discountStr = edtDiscount.text.toString().trim()
             val imageUrl = edtImage.text.toString().trim()
@@ -94,8 +105,7 @@ class AdminProductEditActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             if (brand.isEmpty()) {
-                edtBrand.error = "Vui lòng nhập thương hiệu"
-                edtBrand.requestFocus()
+                Toast.makeText(this, "Vui lòng chọn danh mục", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (priceStr.isEmpty()) {
@@ -114,6 +124,7 @@ class AdminProductEditActivity : AppCompatActivity() {
             val productMap = hashMapOf(
                 "name" to name,
                 "brand" to brand,
+                "categoryId" to categoryId,
                 "price" to price,
                 "discounted" to discount,
                 "imageUrl" to imageUrl,
@@ -157,6 +168,41 @@ class AdminProductEditActivity : AppCompatActivity() {
                     }
             }
         }
+    }
+
+    private fun loadCategories() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("categories")
+            .get()
+            .addOnSuccessListener { result ->
+                categoryList.clear()
+                categoryNames.clear()
+                for (doc in result) {
+                    val name = doc.getString("name") ?: ""
+                    if (name.isNotEmpty()) {
+                        categoryList.add(Pair(doc.id, name))
+                    }
+                }
+                // Sort by name
+                categoryList.sortBy { it.second }
+                categoryNames.addAll(categoryList.map { it.second })
+
+                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryNames)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerBrand.adapter = adapter
+
+                // If editing, select the correct category by categoryId
+                if (pendingCategoryId != null && pendingCategoryId!!.isNotEmpty()) {
+                    val index = categoryList.indexOfFirst { it.first == pendingCategoryId }
+                    if (index >= 0) {
+                        spinnerBrand.setSelection(index)
+                    }
+                    pendingCategoryId = null
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Lỗi tải danh mục: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun addSpecRow(name: String, value: String) {
