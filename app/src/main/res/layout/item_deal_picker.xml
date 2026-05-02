@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp">
+
+    <!-- Discount circle -->
+    <LinearLayout
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_circle"
+        android:backgroundTint="#FFF3E0"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginEnd="14dp">
+
+        <TextView
+            android:id="@+id/tvPickerDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-20%"
+            android:textColor="#E64A19"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvPickerCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SUMMER20"
+            android:textColor="#333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="3dp" />
+
+        <TextView
+            android:id="@+id/tvPickerDates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HSD: 31/05/2026"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Arrow -->
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_back_arrow"
+        android:rotation="180"
+        app:tint="#CCCCCC" />
+
+</LinearLayout>

@@ -41,6 +41,8 @@
         <activity android:name=".AdminCategoryActivity" />
         <activity android:name=".AdminOrderListActivity" />
         <activity android:name=".AdminOrderDetailActivity" />
+        <activity android:name=".AdminUserListActivity" />
+        <activity android:name=".AdminDealListActivity" />
     </application>
 
 </manifest>

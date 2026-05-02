@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Mã deal -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mã deal"
+            android:textColor="#666666"
+            android:textSize="13sp"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/edtDealCode"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Ví dụ: SUMMER20"
+            android:paddingHorizontal="12dp"
+            android:textSize="14sp"
+            android:inputType="textNoSuggestions"
+            android:maxLines="1"
+            android:textAllCaps="false" />
+
+        <!-- Phần trăm giảm -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giảm giá (%)"
+            android:textColor="#666666"
+            android:textSize="13sp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/edtDealDiscount"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Nhập % giảm (1 - 100)"
+            android:paddingHorizontal="12dp"
+            android:textSize="14sp"
+            android:inputType="number"
+            android:maxLines="1" />
+
+        <!-- Ngày bắt đầu -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày bắt đầu"
+            android:textColor="#666666"
+            android:textSize="13sp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_input_field"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:id="@+id/tvDealStartDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chọn ngày"
+                android:textColor="#888888"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/btnPickStartDate"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_notification"
+                android:alpha="0.5"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="2dp" />
+        </LinearLayout>
+
+        <!-- Ngày kết thúc -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày kết thúc"
+            android:textColor="#666666"
+            android:textSize="13sp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_input_field"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:id="@+id/tvDealEndDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chọn ngày"
+                android:textColor="#888888"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/btnPickEndDate"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_notification"
+                android:alpha="0.5"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="2dp" />
+        </LinearLayout>
+
+        <!-- Bật / Tắt -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Kích hoạt mã deal"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+            <Switch
+                android:id="@+id/switchDealActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:thumbTint="#E64A19"
+                android:trackTint="#FFCCBC" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
