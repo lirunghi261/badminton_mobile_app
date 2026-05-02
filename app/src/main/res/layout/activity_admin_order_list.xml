@@ -151,6 +151,20 @@
                     android:textColor="#666666"
                     android:background="@drawable/bg_search_bar"
                     android:paddingHorizontal="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/chipBankTransfer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center"
+                    android:text="Chuyển khoản"
+                    android:textSize="13sp"
+                    android:textColor="#666666"
+                    android:background="@drawable/bg_search_bar"
+                    android:paddingHorizontal="16dp"
                     android:clickable="true"
                     android:focusable="true" />
             </LinearLayout>

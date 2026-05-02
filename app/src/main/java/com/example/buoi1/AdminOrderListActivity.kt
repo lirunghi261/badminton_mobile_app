@@ -35,6 +35,7 @@ class AdminOrderListActivity : AppCompatActivity() {
     private lateinit var tvOrderCount: TextView
 
     private var selectedStatus = "Tất cả"
+    private var filterBankOnly = false
 
     private val statusList = listOf("Chờ xác nhận", "Đang giao", "Thành công", "Đã huỷ")
 
@@ -44,6 +45,7 @@ class AdminOrderListActivity : AppCompatActivity() {
     private lateinit var chipShipping: TextView
     private lateinit var chipCompleted: TextView
     private lateinit var chipCancelled: TextView
+    private lateinit var chipBankTransfer: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,16 +94,29 @@ class AdminOrderListActivity : AppCompatActivity() {
         chipShipping = findViewById(R.id.chipShipping)
         chipCompleted = findViewById(R.id.chipCompleted)
         chipCancelled = findViewById(R.id.chipCancelled)
+        chipBankTransfer = findViewById(R.id.chipBankTransfer)
 
-        val chips = listOf(chipAll, chipPending, chipShipping, chipCompleted, chipCancelled)
+        val statusChips = listOf(chipAll, chipPending, chipShipping, chipCompleted, chipCancelled)
         val chipStatuses = listOf("Tất cả", "Chờ xác nhận", "Đang giao", "Thành công", "Đã huỷ")
 
-        for (i in chips.indices) {
-            chips[i].setOnClickListener {
+        for (i in statusChips.indices) {
+            statusChips[i].setOnClickListener {
                 selectedStatus = chipStatuses[i]
-                updateChipUI(chips, i)
+                filterBankOnly = false
+                updateChipUI(statusChips + listOf(chipBankTransfer), i)
                 applyFilters()
             }
+        }
+
+        chipBankTransfer.setOnClickListener {
+            filterBankOnly = !filterBankOnly
+            if (filterBankOnly) {
+                selectedStatus = "Tất cả"
+                updateChipUI(statusChips + listOf(chipBankTransfer), statusChips.size)
+            } else {
+                updateChipUI(statusChips + listOf(chipBankTransfer), 0)
+            }
+            applyFilters()
         }
 
         fetchOrders()
@@ -158,10 +173,11 @@ class AdminOrderListActivity : AppCompatActivity() {
                     order.id.lowercase().contains(query) ||
                     order.items.any { it.product.name.lowercase().contains(query) }
 
-            val matchesStatus = selectedStatus == "Tất cả" ||
-                    order.status == selectedStatus
+            val matchesStatus = selectedStatus == "Tất cả" || order.status == selectedStatus
 
-            matchesSearch && matchesStatus
+            val matchesPayment = !filterBankOnly || order.paymentMethod == "Chuyển khoản ngân hàng"
+
+            matchesSearch && matchesStatus && matchesPayment
         })
 
         adapter.notifyDataSetChanged()

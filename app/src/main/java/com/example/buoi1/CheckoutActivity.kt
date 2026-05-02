@@ -178,11 +178,21 @@ class CheckoutActivity : AppCompatActivity() {
                     if (directBuyProduct == null) {
                         itemsToCheckout.map { it.product.name }.forEach { CartManager.removeFromCart(it) }
                     }
-                    Toast.makeText(applicationContext, "Đặt hàng thành công! ($paymentMethod)", Toast.LENGTH_LONG).show()
-                    val intent = Intent(this, HomeActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
+                    if (!isCOD) {
+                        // Open QR payment screen
+                        val qrIntent = Intent(this, QrPaymentActivity::class.java)
+                        qrIntent.putExtra(QrPaymentActivity.EXTRA_ORDER_ID, order.id)
+                        qrIntent.putExtra(QrPaymentActivity.EXTRA_AMOUNT, finalTotal.toLong())
+                        qrIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(qrIntent)
+                        finish()
+                    } else {
+                        Toast.makeText(applicationContext, "Đặt hàng thành công!", Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, HomeActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        finish()
+                    }
                 },
                 onFailure = { e ->
                     btnPlaceOrder.isEnabled = true
