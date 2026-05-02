@@ -46,6 +46,8 @@
         <activity android:name=".AdminUserListActivity" />
         <activity android:name=".AdminDealListActivity" />
         <activity android:name=".QrPaymentActivity" />
+        <activity android:name=".WarrantyActivity" />
+        <activity android:name=".AdminWarrantyListActivity" />
     </application>
 
 </manifest>

@@ -132,6 +132,47 @@
             android:layout_marginStart="60dp"
             android:background="#F0F0F0" />
 
+        <!-- Warranty Button -->
+        <LinearLayout
+            android:id="@+id/btnAccountWarranty"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_star_filled"
+                app:tint="#E64A19" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:text="Bảo hành của tôi"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_back_arrow"
+                android:rotation="180"
+                app:tint="#CCCCCC" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="60dp"
+            android:background="#F0F0F0" />
+
         <!-- Placeholder Other Options -->
         <LinearLayout
             android:layout_width="match_parent"

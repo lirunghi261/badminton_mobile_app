@@ -37,6 +37,10 @@ class AccountFragment : Fragment() {
             startActivity(Intent(requireContext(), OrderHistoryActivity::class.java))
         }
 
+        view.findViewById<LinearLayout>(R.id.btnAccountWarranty).setOnClickListener {
+            startActivity(Intent(requireContext(), WarrantyActivity::class.java))
+        }
+
         // Logout button
         view.findViewById<LinearLayout>(R.id.btnAccountLogout).setOnClickListener {
             AlertDialog.Builder(requireContext())

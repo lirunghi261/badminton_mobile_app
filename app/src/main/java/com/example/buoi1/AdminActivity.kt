@@ -58,6 +58,10 @@ class AdminActivity : AppCompatActivity() {
             startActivity(Intent(this, AdminDealListActivity::class.java))
         }
 
+        findViewById<LinearLayout>(R.id.btnManageWarranty).setOnClickListener {
+            startActivity(Intent(this, AdminWarrantyListActivity::class.java))
+        }
+
         findViewById<Button>(R.id.btnAdminLogout).setOnClickListener {
             UserManager.logout()
             val intent = Intent(this, MainActivity::class.java)

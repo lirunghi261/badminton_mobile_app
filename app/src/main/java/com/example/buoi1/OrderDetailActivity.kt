@@ -13,7 +13,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class OrderDetailActivity : AppCompatActivity() {
@@ -171,6 +175,14 @@ class OrderDetailActivity : AppCompatActivity() {
                 .show()
         }
 
+        // Warranty section — only visible for completed orders
+        val layoutWarrantySection = findViewById<LinearLayout>(R.id.layoutWarrantySection)
+        val llWarrantyItems = findViewById<LinearLayout>(R.id.llWarrantyItems)
+        if (order.status == "Thành công") {
+            layoutWarrantySection.visibility = View.VISIBLE
+            setupWarrantyItems(order, llWarrantyItems)
+        }
+
         // Reorder button
         btnReorder.setOnClickListener {
             AlertDialog.Builder(this)
@@ -193,5 +205,95 @@ class OrderDetailActivity : AppCompatActivity() {
                 .setNegativeButton("Không", null)
                 .show()
         }
+    }
+
+    private fun setupWarrantyItems(order: Order, container: LinearLayout) {
+        val db = FirebaseFirestore.getInstance()
+        val username = UserManager.currentUser?.username ?: return
+        val sdfDisplay = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        // Load existing warranties for this order to know which products already registered
+        db.collection("warranties")
+            .whereEqualTo("orderId", order.id)
+            .whereEqualTo("userId", username)
+            .get()
+            .addOnSuccessListener { result ->
+                val registeredProducts = result.documents.map { it.getString("productName") ?: "" }.toSet()
+
+                container.removeAllViews()
+                for (item in order.items) {
+                    val rowView = layoutInflater.inflate(R.layout.item_warranty_register_row, container, false)
+                    val tvName = rowView.findViewById<TextView>(R.id.tvWarrantyRegisterProduct)
+                    val btnRegister = rowView.findViewById<Button>(R.id.btnRegisterWarranty)
+
+                    tvName.text = item.product.name
+
+                    if (item.product.name in registeredProducts) {
+                        btnRegister.text = "Đã đăng ký"
+                        btnRegister.isEnabled = false
+                        btnRegister.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                            android.graphics.Color.parseColor("#AAAAAA")
+                        )
+                    } else {
+                        btnRegister.text = "Đăng ký BH"
+                        btnRegister.setOnClickListener {
+                            registerWarranty(order, item.product.name, username, sdfDisplay) {
+                                btnRegister.text = "Đã đăng ký"
+                                btnRegister.isEnabled = false
+                                btnRegister.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                                    android.graphics.Color.parseColor("#AAAAAA")
+                                )
+                            }
+                        }
+                    }
+                    container.addView(rowView)
+                }
+            }
+    }
+
+    private fun registerWarranty(
+        order: Order,
+        productName: String,
+        username: String,
+        sdfDisplay: SimpleDateFormat,
+        onDone: () -> Unit
+    ) {
+        val db = FirebaseFirestore.getInstance()
+
+        // Parse purchase date from order.date (format: dd/MM/yyyy HH:mm)
+        val sdfFull = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val purchaseDate = try {
+            val d = sdfFull.parse(order.date) ?: Date()
+            sdfDisplay.format(d)
+        } catch (_: Exception) { order.date }
+
+        // Expiry = purchase + 12 months
+        val expiryDate = try {
+            val d = sdfFull.parse(order.date) ?: Date()
+            val cal = Calendar.getInstance()
+            cal.time = d
+            cal.add(Calendar.MONTH, 12)
+            sdfDisplay.format(cal.time)
+        } catch (_: Exception) { "" }
+
+        val data = mapOf(
+            "userId" to username,
+            "orderId" to order.id,
+            "productName" to productName,
+            "purchaseDate" to purchaseDate,
+            "expiryDate" to expiryDate,
+            "status" to "Đang bảo hành",
+            "claimNote" to "",
+            "adminNote" to ""
+        )
+
+        db.collection("warranties").add(data)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Đăng ký bảo hành thành công!", Toast.LENGTH_SHORT).show()
+                onDone()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Lỗi đăng ký bảo hành", Toast.LENGTH_SHORT).show()
+            }
     }
 }
