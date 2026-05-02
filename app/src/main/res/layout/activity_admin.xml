@@ -400,6 +400,7 @@
 
                     <!-- Manage Orders -->
                     <LinearLayout
+                        android:id="@+id/btnManageOrders"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:background="?attr/selectableItemBackground"

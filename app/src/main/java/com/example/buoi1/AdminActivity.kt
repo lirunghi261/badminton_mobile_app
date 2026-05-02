@@ -44,6 +44,11 @@ class AdminActivity : AppCompatActivity() {
             startActivity(Intent(this, AdminCategoryActivity::class.java))
         }
 
+        // Manage Orders button
+        findViewById<LinearLayout>(R.id.btnManageOrders).setOnClickListener {
+            startActivity(Intent(this, AdminOrderListActivity::class.java))
+        }
+
         // Logout button
         val btnAdminLogout = findViewById<Button>(R.id.btnAdminLogout)
         btnAdminLogout.setOnClickListener {

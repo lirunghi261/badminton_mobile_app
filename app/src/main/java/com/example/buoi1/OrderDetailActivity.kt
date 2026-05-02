@@ -74,21 +74,29 @@ class OrderDetailActivity : AppCompatActivity() {
 
         // Set status color and button visibility
         fun updateStatusUI(status: String) {
+            tvOrderDetailStatus.text = status
             when (status) {
                 "Đã huỷ" -> {
-                    tvOrderDetailStatus.text = "Đã huỷ"
                     tvOrderDetailStatus.setTextColor(android.graphics.Color.parseColor("#999999"))
                     btnCancelOrder.visibility = View.GONE
                     btnReorder.visibility = View.VISIBLE
                 }
                 "Chờ xác nhận" -> {
-                    tvOrderDetailStatus.text = "Chờ xác nhận"
-                    tvOrderDetailStatus.setTextColor(android.graphics.Color.parseColor("#E64A19"))
+                    tvOrderDetailStatus.setTextColor(android.graphics.Color.parseColor("#EF6C00"))
                     btnCancelOrder.visibility = View.VISIBLE
                     btnReorder.visibility = View.GONE
                 }
+                "Đang giao" -> {
+                    tvOrderDetailStatus.setTextColor(android.graphics.Color.parseColor("#1565C0"))
+                    btnCancelOrder.visibility = View.GONE
+                    btnReorder.visibility = View.GONE
+                }
+                "Thành công" -> {
+                    tvOrderDetailStatus.setTextColor(android.graphics.Color.parseColor("#2E7D32"))
+                    btnCancelOrder.visibility = View.GONE
+                    btnReorder.visibility = View.GONE
+                }
                 else -> {
-                    tvOrderDetailStatus.text = status
                     tvOrderDetailStatus.setTextColor(android.graphics.Color.parseColor("#4CAF50"))
                     btnCancelOrder.visibility = View.GONE
                     btnReorder.visibility = View.GONE

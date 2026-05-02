@@ -74,7 +74,9 @@ class OrderHistoryActivity : AppCompatActivity() {
                         // Update status color based on order status
                         when (order.status) {
                             "Đã huỷ" -> tvOrderStatus.setTextColor(android.graphics.Color.parseColor("#999999"))
-                            "Chờ xác nhận" -> tvOrderStatus.setTextColor(android.graphics.Color.parseColor("#E64A19"))
+                            "Chờ xác nhận" -> tvOrderStatus.setTextColor(android.graphics.Color.parseColor("#EF6C00"))
+                            "Đang giao" -> tvOrderStatus.setTextColor(android.graphics.Color.parseColor("#1565C0"))
+                            "Thành công" -> tvOrderStatus.setTextColor(android.graphics.Color.parseColor("#2E7D32"))
                             else -> tvOrderStatus.setTextColor(android.graphics.Color.parseColor("#4CAF50"))
                         }
 

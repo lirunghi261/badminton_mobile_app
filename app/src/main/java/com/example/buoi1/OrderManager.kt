@@ -91,6 +91,26 @@ object OrderManager {
     }
 
     /**
+     * Update order status - for admin to change status to any value
+     */
+    fun updateOrderStatus(id: String, newStatus: String, onSuccess: (() -> Unit)? = null, onFailure: ((Exception) -> Unit)? = null) {
+        getDb().collection("orders")
+            .document(id)
+            .update("status", newStatus)
+            .addOnSuccessListener {
+                val index = orders.indexOfFirst { it.id == id }
+                if (index != -1) {
+                    val order = orders[index]
+                    orders[index] = order.copy(status = newStatus)
+                }
+                onSuccess?.invoke()
+            }
+            .addOnFailureListener { e ->
+                onFailure?.invoke(e)
+            }
+    }
+
+    /**
      * Delete order from Firestore and local cache
      */
     fun deleteOrder(id: String, onSuccess: (() -> Unit)? = null, onFailure: ((Exception) -> Unit)? = null) {

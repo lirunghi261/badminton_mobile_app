@@ -39,6 +39,8 @@
         <activity android:name=".AdminProductListActivity" />
         <activity android:name=".AdminProductEditActivity" />
         <activity android:name=".AdminCategoryActivity" />
+        <activity android:name=".AdminOrderListActivity" />
+        <activity android:name=".AdminOrderDetailActivity" />
     </application>
 
 </manifest>
