@@ -39,6 +39,12 @@ class CheckoutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (UserManager.restoreSession(this) == null) {
+            Toast.makeText(this, "Bạn cần đăng nhập để thanh toán", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_checkout)
 

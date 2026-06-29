@@ -96,6 +96,17 @@ class AdminUserListActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 userList.clear()
                 for (doc in result) {
+                    val addressDefaults = mutableMapOf<String, Any>()
+                    if (!doc.contains("addresses")) {
+                        addressDefaults["addresses"] = emptyList<String>()
+                    }
+                    if (!doc.contains("selectedAddressIndex")) {
+                        addressDefaults["selectedAddressIndex"] = 0
+                    }
+                    if (addressDefaults.isNotEmpty()) {
+                        doc.reference.update(addressDefaults)
+                    }
+
                     userList.add(
                         UserWithId(
                             docId = doc.id,
@@ -164,11 +175,13 @@ class AdminUserListActivity : AppCompatActivity() {
                     if (exists) {
                         Toast.makeText(this, "Tên đăng nhập đã tồn tại", Toast.LENGTH_SHORT).show()
                     } else {
-                        val data = hashMapOf(
+                        val data = hashMapOf<String, Any>(
                             "fullName" to fullName,
                             "username" to username,
                             "password" to password,
-                            "role" to role
+                            "role" to role,
+                            "addresses" to emptyList<String>(),
+                            "selectedAddressIndex" to 0
                         )
                         db.collection("users").add(data)
                             .addOnSuccessListener {
@@ -234,13 +247,13 @@ class AdminUserListActivity : AppCompatActivity() {
     }
 
     private fun updateUser(docId: String, fullName: String, username: String, password: String, role: String) {
-        val data = hashMapOf(
+        val data = hashMapOf<String, Any>(
             "fullName" to fullName,
             "username" to username,
             "password" to password,
             "role" to role
         )
-        db.collection("users").document(docId).set(data)
+        db.collection("users").document(docId).update(data)
             .addOnSuccessListener {
                 Toast.makeText(this, "Đã cập nhật người dùng", Toast.LENGTH_SHORT).show()
                 fetchUsers()

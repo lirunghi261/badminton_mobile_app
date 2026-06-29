@@ -21,6 +21,13 @@ class AdminActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val currentUser = UserManager.restoreSession(this)
+        if (currentUser?.role != "admin") {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_admin)
 
@@ -31,10 +38,7 @@ class AdminActivity : AppCompatActivity() {
         }
 
         val tvAdminWelcome = findViewById<TextView>(R.id.tvAdminWelcome)
-        val currentUser = UserManager.currentUser
-        if (currentUser != null) {
-            tvAdminWelcome.text = "Xin chào, ${currentUser.fullName}!"
-        }
+        tvAdminWelcome.text = "Xin chào, ${currentUser.fullName}!"
 
         loadStats()
 
@@ -63,7 +67,7 @@ class AdminActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnAdminLogout).setOnClickListener {
-            UserManager.logout()
+            UserManager.logout(this)
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)

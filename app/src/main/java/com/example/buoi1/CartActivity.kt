@@ -197,12 +197,12 @@ class CartActivity : AppCompatActivity() {
     private fun fetchRecommendedProducts() {
         val glRecommended = findViewById<GridLayout>(R.id.glCartRecommended)
         val db = FirebaseFirestore.getInstance()
-        
+        val cartItems = CartManager.getCartItems()
+
         db.collection("products")
-            .limit(6) // Fetch arbitrary 6 products for recommendation
             .get()
             .addOnSuccessListener { result ->
-                val products = result.mapNotNull { doc ->
+                val allProducts = result.mapNotNull { doc ->
                     Product(
                         name = doc.getString("name") ?: "",
                         brand = doc.getString("brand") ?: "",
@@ -215,7 +215,21 @@ class CartActivity : AppCompatActivity() {
                         discounted = doc.getLong("discounted")?.toInt() ?: 0
                     )
                 }
-                renderRecommendedProducts(products, glRecommended)
+
+                val recommendations = if (cartItems.isEmpty()) {
+                    allProducts.shuffled().take(6)
+                } else {
+                    val cartProductNames = cartItems.map { it.product.name }.toSet()
+                    val candidates = allProducts.filter { it.name !in cartProductNames }
+
+                    candidates
+                        .map { product -> product to calculateRecommendationScore(product, cartItems) }
+                        .sortedByDescending { it.second }
+                        .take(6)
+                        .map { it.first }
+                }
+
+                renderRecommendedProducts(recommendations, glRecommended)
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Error fetching recommended products: ${e.message}", e)
@@ -291,4 +305,49 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun Int.dpToPx(): Int = (this * resources.displayMetrics.density).toInt()
+
+    private fun calculateJaccardSimilarity(setA: Set<String>, setB: Set<String>): Double {
+        if (setA.isEmpty() && setB.isEmpty()) return 0.0
+
+        val intersection = setA.intersect(setB)
+        val union = setA.union(setB)
+
+        return if (union.isEmpty()) 0.0 else intersection.size.toDouble() / union.size
+    }
+
+    private fun generateProductTags(product: Product): Set<String> {
+        return buildSet {
+            if (product.brand.isNotEmpty()) {
+                add("brand:${product.brand.lowercase()}")
+            }
+
+            if (product.categoryId.isNotEmpty()) {
+                add("category:${product.categoryId}")
+            }
+
+            if (product.discounted > 0) {
+                add("discount:has_discount")
+            } else {
+                add("discount:regular_price")
+            }
+        }
+    }
+
+    private fun calculateRecommendationScore(
+        candidateProduct: Product,
+        cartItems: List<CartItem>
+    ): Double {
+        if (cartItems.isEmpty()) return 0.0
+
+        val candidateTags = generateProductTags(candidateProduct)
+        var totalSimilarity = 0.0
+
+        for (cartItem in cartItems) {
+            val cartProductTags = generateProductTags(cartItem.product)
+            val similarity = calculateJaccardSimilarity(candidateTags, cartProductTags)
+            totalSimilarity += similarity
+        }
+
+        return totalSimilarity / cartItems.size
+    }
 }

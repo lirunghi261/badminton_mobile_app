@@ -79,6 +79,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "đang ở onCreate nè")
+        if (UserManager.restoreSession(this) == null) {
+            startActivity(android.content.Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
         binding = HomeScreenBinding.inflate(layoutInflater)
         setContentView(binding.root) // Changed to binding.root

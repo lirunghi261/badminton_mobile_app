@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_screen_gradient"
     android:padding="24dp"
-    tools:context=".MainActivity">
+    tools:context=".RegisterActivity">
 
     <ImageView
         android:id="@+id/logo"

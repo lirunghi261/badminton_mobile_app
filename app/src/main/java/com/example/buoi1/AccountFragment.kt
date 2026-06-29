@@ -24,7 +24,7 @@ class AccountFragment : Fragment() {
 
         // Show user name
         val tvAccountName = view.findViewById<TextView>(R.id.tvAccountName)
-        val currentUser = UserManager.currentUser
+        val currentUser = UserManager.restoreSession(requireContext())
         if (currentUser != null) {
             tvAccountName.text = currentUser.fullName
         }
@@ -47,7 +47,7 @@ class AccountFragment : Fragment() {
                 .setTitle("Đăng xuất")
                 .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
                 .setPositiveButton("Đăng xuất") { _, _ ->
-                    UserManager.logout()
+                    UserManager.logout(requireContext())
                     val intent = Intent(requireContext(), MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)

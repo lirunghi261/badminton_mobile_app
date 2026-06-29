@@ -47,6 +47,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "đang ở onCreate nè")
+        UserManager.restoreSession(this)?.let { user ->
+            openDashboard(user)
+            return
+        }
+
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -69,20 +74,18 @@ class MainActivity : AppCompatActivity() {
             // Disable button to prevent double-tap
             binding.btnLogin.isEnabled = false
 
-            UserManager.login(username, password,
+            UserManager.login(username, password, this,
                 onSuccess = { user ->
                     binding.btnLogin.isEnabled = true
 
                     when (user.role) {
                         "admin" -> {
                             Toast.makeText(this, "Xin chào Admin: ${user.fullName}", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, AdminActivity::class.java)
-                            startActivity(intent)
+                            openDashboard(user)
                         }
                         else -> {
                             Toast.makeText(this, "Xin chào: ${user.fullName}", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, HomeActivity::class.java)
-                            startActivity(intent)
+                            openDashboard(user)
                         }
                     }
                 },
@@ -94,8 +97,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.tvRegister.setOnClickListener {
-            Toast.makeText(this, "Register Clicked", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
+    }
+
+    private fun openDashboard(user: User) {
+        val targetActivity = if (user.role == "admin") {
+            AdminActivity::class.java
+        } else {
+            HomeActivity::class.java
+        }
+        startActivity(Intent(this, targetActivity))
+        finish()
     }
 
 }
