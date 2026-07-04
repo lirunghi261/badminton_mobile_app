@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Bai Tap Buoi 1</string>
+    <string name="open_chatbot">Mở trợ lý tư vấn</string>
+    <string name="close_chatbot">Đóng trợ lý tư vấn</string>
+    <string name="chatbot_name">Trợ lý Lirunghi Shop</string>
+    <string name="chatbot_online">● Đang hoạt động</string>
+    <string name="chatbot_input_hint">Nhập câu hỏi của bạn…</string>
+    <string name="send_chat_message">Gửi tin nhắn</string>
 </resources>

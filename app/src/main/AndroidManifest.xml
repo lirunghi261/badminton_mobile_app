@@ -39,6 +39,7 @@
         <activity android:name=".OrderHistoryActivity" />
         <activity android:name=".OrderDetailActivity" />
         <activity android:name=".AdminActivity" />
+        <activity android:name=".AdminFinanceActivity" />
         <activity android:name=".AdminProductListActivity" />
         <activity android:name=".AdminProductEditActivity" />
         <activity android:name=".AdminCategoryActivity" />

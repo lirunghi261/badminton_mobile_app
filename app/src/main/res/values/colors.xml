@@ -14,4 +14,20 @@
     <!-- Bottom Nav Colors -->
     <color name="nav_selected">#E64A19</color>
     <color name="nav_unselected">#999999</color>
+
+    <!-- Chatbot -->
+    <color name="chatBotBubble">#FFF3E0</color>
+    <color name="chatInputBackground">#FAFAFA</color>
+    <color name="chatDivider">#ECECEF</color>
+    <color name="chatMutedText">#7A7A83</color>
+    <color name="chatOnline">#2E9B62</color>
+
+    <!-- Admin dashboard -->
+    <color name="adminDashboardBackground">#F6F7FB</color>
+    <color name="adminOrange">#F4511E</color>
+    <color name="adminBlue">#1687E8</color>
+    <color name="adminGreen">#249B5B</color>
+    <color name="adminPurple">#8E44AD</color>
+    <color name="adminGold">#F5A623</color>
+    <color name="adminCyan">#00A6A6</color>
 </resources>

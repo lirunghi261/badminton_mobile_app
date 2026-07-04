@@ -137,12 +137,14 @@ class HomeActivity : AppCompatActivity() {
                     binding.scrollViewHome.visibility = android.view.View.VISIBLE
                     binding.toolbar.visibility = android.view.View.VISIBLE
                     binding.fragmentContainer.visibility = android.view.View.GONE
+                    binding.btnChatbot.show()
                     true
                 }
                 R.id.nav_products -> {
                     binding.scrollViewHome.visibility = android.view.View.GONE
                     binding.toolbar.visibility = android.view.View.GONE
                     binding.fragmentContainer.visibility = android.view.View.VISIBLE
+                    binding.btnChatbot.hide()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, ProductsFragment())
                         .commit()
@@ -152,6 +154,7 @@ class HomeActivity : AppCompatActivity() {
                     binding.scrollViewHome.visibility = android.view.View.GONE
                     binding.toolbar.visibility = android.view.View.GONE
                     binding.fragmentContainer.visibility = android.view.View.VISIBLE
+                    binding.btnChatbot.hide()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, AccountFragment())
                         .commit()
@@ -159,6 +162,10 @@ class HomeActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+
+        binding.btnChatbot.setOnClickListener {
+            ChatbotBottomSheet(this).show()
         }
         
         CartManager.addListener(cartListener)

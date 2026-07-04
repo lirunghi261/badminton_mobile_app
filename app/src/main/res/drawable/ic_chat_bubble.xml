@@ -1,0 +1,41 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Headset arc -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M4.4,12C4.4,7.8 7.8,4.4 12,4.4S19.6,7.8 19.6,12"
+        android:strokeColor="@android:color/white"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.8" />
+
+    <!-- Left and right ear pads -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M4.8,9.8H3.7C2.76,9.8 2,10.56 2,11.5v3C2,15.44 2.76,16.2 3.7,16.2h1.1zM19.2,9.8h1.1c0.94,0 1.7,0.76 1.7,1.7v3c0,0.94 -0.76,1.7 -1.7,1.7h-1.1z" />
+
+    <!-- Chat bubble with tail -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,6.2C8.45,6.2 5.6,8.55 5.6,11.5c0,1.6 0.86,3.05 2.25,4.02 -0.3,1.05 -0.94,1.9 -1.93,2.52 1.62,0.08 3.0,-0.34 3.98,-1.04 0.66,0.18 1.36,0.28 2.1,0.28 3.55,0 6.4,-2.36 6.4,-5.3S15.55,6.2 12,6.2z" />
+
+    <!-- Three message dots -->
+    <path
+        android:fillColor="@color/colorPrimary"
+        android:pathData="M9,10.75a0.78,0.78 0,1 0,0 1.56a0.78,0.78 0,0 0,0 -1.56zM12,10.75a0.78,0.78 0,1 0,0 1.56a0.78,0.78 0,0 0,0 -1.56zM15,10.75a0.78,0.78 0,1 0,0 1.56a0.78,0.78 0,0 0,0 -1.56z" />
+
+    <!-- Microphone arm -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M19.6,15.2C19.6,17.7 17.55,19.7 15.1,19.7h-1.3"
+        android:strokeColor="@android:color/white"
+        android:strokeLineCap="round"
+        android:strokeWidth="1.5" />
+
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M11.8,18.8h2.2c0.55,0 1,0.45 1,1s-0.45,1 -1,1h-2.2c-0.55,0 -1,-0.45 -1,-1s0.45,-1 1,-1z" />
+</vector>
